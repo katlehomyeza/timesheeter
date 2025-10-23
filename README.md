@@ -20,14 +20,10 @@ Designed for freelancers, students, and professionals who want to track time wit
 
 | Layer | Technology |
 |-------|-------------|
-| **Frontend** | React (Vite or CRA) |
+| **Frontend** | React (Vite) |
 | **Backend** | Node.js + Express |
-| **Database** | PostgreSQL (via Prisma or Sequelize) |
+| **Database** | PostgreSQL |
 | **Auth** | JWT + bcrypt |
 | **Charts / Visualization** | Recharts / Chart.js |
-| **Styling** | Tailwind CSS or Material UI |
-
 ---
-
-## 🏗️ Project Structure
 
