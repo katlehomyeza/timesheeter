@@ -2,7 +2,7 @@
 INSERT INTO goal_periods (period_type) VALUES 
     ('weekly'),
     ('monthly'),
-    ('custom')
+    ('daily')
 ON CONFLICT (period_type) DO NOTHING;
 
 
