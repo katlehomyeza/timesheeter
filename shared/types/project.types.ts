@@ -1,7 +1,6 @@
 import type { User } from "./users.types"
 import type { UUID } from "@shared/types/utility.types"
 
-
 export type Project = {
     id : UUID,
     userId : User["id"],
@@ -29,7 +28,6 @@ export type Goal = {
   title: string;
   targetHours: number;
 };
-
 
 export type GoalPeriod = {
     id:UUID,
