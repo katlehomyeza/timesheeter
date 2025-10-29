@@ -1,27 +1,26 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import './App.css'
-import LandingPage from './pages/LandingPage/LandingPage'
-import ProtectedRoute from './components/ProtectedRoute'
-import Dashboard from './pages/Dashboard/DashBoard'
-
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import "./App.css";
+import LandingPage from "./pages/LandingPage/LandingPage";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Dashboard from "./pages/Dashboard/DashBoard";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/landing" element={<LandingPage />} />
-        <Route 
-          path="/home" 
+        <Route
+          path="/home"
           element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/home" replace />} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
