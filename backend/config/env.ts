@@ -4,10 +4,16 @@ dotenv.config();
 
 export const env = {
   postgres: {
-    user: process.env.POSTGRES_USER || "postgres",
-    password: process.env.POSTGRES_PASSWORD || "",
-    database: process.env.POSTGRES_DB || "timetracker",
-    host: process.env.POSTGRES_HOST || "localhost",
-    port: Number(process.env.POSTGRES_PORT) || 5432,
+    user: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DB,
+    host: process.env.POSTGRES_HOST,
+    port: Number(process.env.POSTGRES_PORT),
+    
   },
+  auth: {
+    jwtSecret: process.env.JWT_SECRET,
+    clientId: process.env.GOOGLE_CLIENT_ID, 
+    clientSecret:process.env.GOOGLE_CLIENT_SECRET,
+  }
 };
