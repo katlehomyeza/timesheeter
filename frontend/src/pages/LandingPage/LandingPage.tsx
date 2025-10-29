@@ -1,19 +1,25 @@
+import { useNavigate } from "react-router-dom";
 import "./LandingPage.css"
+import { handleGoogleAuthentication } from "../../services/auth.service";
 
 
+  
 export default function LandingPage() {
-    function handleGetStarted() {
-        alert("Get started functionality not implemented yet.");
+    const navigate = useNavigate();
+    const handleGetStarted = async () => {
+    try {
+      await handleGoogleAuthentication();
+      navigate('/home');
+    } catch (error) {
+      console.error('Auth failed:', error);
     }
+  };
 
     return (
         <>
             <header>
-                
-                    <a href="#" className="logo">Timesheeter</a>
-              
+                <a href="#" className="logo">Timesheeter</a>
             </header>
-
             <main>
                 <section className="hero">
                     <article className="container">

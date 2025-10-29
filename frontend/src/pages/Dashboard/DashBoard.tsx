@@ -2,8 +2,6 @@ import { useState } from 'react'
 import reactLogo from '../../assets/react.svg'
 import './DashBoard.css'
 
-
-
 export default function Dashboard() {
   const [count, setCount] = useState(0)
 
