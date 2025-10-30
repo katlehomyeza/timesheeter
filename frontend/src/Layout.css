@@ -1,0 +1,16 @@
+.layout {
+  display: flex;
+  width: 100vw;  /* Changed from 100% to 100vw */
+  height: 100vh;
+  background-color: #000000; /* Ensure pure black */
+  color: white;
+  overflow: hidden;
+  position: relative; /* ADD */
+}
+
+.layout-main {
+  flex: 1;
+  overflow-y: auto;
+  height: 100%;
+  background-color: #000000; /* ADD - force black */
+}
