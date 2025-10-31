@@ -59,6 +59,12 @@ router.get(
   passport.authenticate("google", { session: false }),
   (req: any, res) => {
     try {
+
+      const userPayload = {
+        email: req.user.email,
+        name: req.user.name,
+      };
+
       const token = jwt.sign(
         { 
           userId: req.user.id,     
@@ -107,8 +113,11 @@ router.get(
               // Send token to parent window
               if (window.opener) {
                 window.opener.postMessage(
-                  { token: '${token}' }, 
-                  '${CLIENT_URL}'
+                { 
+                    token: '${token}',
+                    user: '${JSON.stringify(userPayload)}',
+                }, 
+                '${CLIENT_URL}'
                 );
                 window.close();
               } else {

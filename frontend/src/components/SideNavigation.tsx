@@ -1,7 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Clock, BarChart3, Calendar, Target, Folder } from 'lucide-react';
+import { Clock, BarChart3, Target, Folder } from 'lucide-react';
 import './SideNavigation.css';
 import { logout } from '../utils/auth';
+import { retrieveUser } from '../utils/auth';
+import { isError } from '../utils/utils';
 
 const Sidebar = () => {
   const location = useLocation();
@@ -9,11 +11,10 @@ const Sidebar = () => {
   const navItems = [
     { path: '/home', icon: BarChart3, label: 'Dashboard' },
     { path: '/tracker', icon: Clock, label: 'Tracker' },
-    { path: '/weekly', icon: Calendar, label: 'Weekly' },
-    { path: '/goals', icon: Target, label: 'Goals' },
     { path: '/projects', icon: Folder, label: 'Projects' },
+    { path: '/goals', icon: Target, label: 'Goals' },
   ];
-  
+  let loggedInUser = (retrieveUser());
   return (
     <div className="sidebar">
       {/* Logo */}
@@ -22,8 +23,12 @@ const Sidebar = () => {
           <Clock className="sidebar-logo-icon" />
         </div>
         <div>
-          <div className="sidebar-title">TimeFlow</div>
-          <div className="sidebar-subtitle">Precision Tracking</div>
+          {!isError(loggedInUser) && (
+          <div>
+            <div className="sidebar-title">TimeSheeter</div>
+            <div className="sidebar-subtitle">{loggedInUser.name}</div>
+          </div>
+        )}
         </div>
       </div>
       
