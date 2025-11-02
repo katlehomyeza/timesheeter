@@ -3,6 +3,7 @@ import './Project.css';
 import { createProject, deleteProject, getProjects } from '../../services/project.service';
 import { isErrorDetail } from '@shared/types/utility.types';
 import type { Project } from '@shared/types/project.types';
+import ClockLoader from '../../components/ClockLoader/ClockLoader';
 
 export default function Projects() {
     const [categoryName, setCategoryName] = useState('');
@@ -114,8 +115,7 @@ export default function Projects() {
                 
                 {categories === null ? (
                     <div className="loading-state">
-                        <div className="spinner"></div>
-                        <p>Loading projects...</p>
+                        <ClockLoader></ClockLoader>
                     </div>
                 ) : categories.length === 0 ? (
                     <div className="empty-state">
