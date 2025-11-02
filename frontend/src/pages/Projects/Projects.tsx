@@ -1,39 +1,72 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Project.css';
+import { createProject, deleteProject, getProjects } from '../../services/project.service';
+import { isErrorDetail } from '@shared/types/utility.types';
+import type { Project } from '@shared/types/project.types';
 
 export default function Projects() {
     const [categoryName, setCategoryName] = useState('');
     const [description, setDescription] = useState('');
     const [selectedColor, setSelectedColor] = useState('#3B82F6');
-    const [categories, setCategories] = useState([
-        { id: 1, name: 'Development', description: 'Design display', color: '#3B82F6', todayTime: '0:00', totalTime: '0:00' },
-        { id: 2, name: 'Design', description: 'Design display', color: '#8B5CF6', todayTime: '0:00.83', totalTime: '0:00.83' },
-        { id: 3, name: 'Meetings', description: 'Design display', color: '#F59E0B', todayTime: '0:00', totalTime: '0:00' }
-    ]);
+    const [categories, setCategories] = useState<Project[] | null>(null);
+    const [isAdding, setIsAdding] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleAddCategory = () => {
-        if (categoryName.trim()) {
-            const newCategory = {
-                id: Date.now(),
-                name: categoryName,
-                description: description || 'Design display',
-                color: selectedColor,
-                todayTime: '0:00',
-                totalTime: '0:00'
-            };
-            setCategories([...categories, newCategory]);
-            setCategoryName('');
-            setDescription('');
-            setSelectedColor('#3B82F6');
+    useEffect(() => {
+        fetchProjects();
+    }, []);
+
+    const fetchProjects = async () => {
+        setError(null);
+        const result = await getProjects();
+        
+        if (isErrorDetail(result)) {
+            setError(result.message);
+            setCategories([]);
+        } else {
+            setCategories(result);
         }
     };
 
-    const handleDeleteCategory = (id:number) => {
-        setCategories(categories.filter(cat => cat.id !== id));
+    const handleAddCategory = async () => {
+        if (categoryName.trim()) {
+            setIsAdding(true);
+            setError(null);
+            
+            const result = await createProject(categoryName, selectedColor, description || undefined);
+            
+            if (isErrorDetail(result)) {
+                setError(result.message);
+            } else {
+                setCategories([...(categories || []), result]);
+                setCategoryName('');
+                setDescription('');
+                setSelectedColor('#3B82F6');
+            }
+            setIsAdding(false);
+        }
+    };
+
+    const handleDeleteCategory = async (id: string) => {
+        setError(null);
+        const result = await deleteProject(id);
+        
+        if (isErrorDetail(result)) {
+            setError(result.message);
+        } else {
+            setCategories((categories || []).filter(cat => cat.id !== id));
+        }
     };
 
     return (
         <section className="container">
+            {error && (
+                <div className="error-banner">
+                    {error}
+                    <button onClick={() => setError(null)}>✕</button>
+                </div>
+            )}
+            
             <section className="add-category-section">
                 <h4 className="section-title">Add Category</h4>
                 <p className="section-subtitle">Create a new time tracking category</p>
@@ -70,8 +103,8 @@ export default function Projects() {
                     />
                 </article>
 
-                <button className="add-button" onClick={handleAddCategory}>
-                    + Add Category
+                <button className="add-button" onClick={handleAddCategory} disabled={isAdding}>
+                    {isAdding ? 'Adding...' : '+ Add Category'}
                 </button>
             </section>
 
@@ -79,38 +112,49 @@ export default function Projects() {
                 <h4 className="section-title">Your Categories</h4>
                 <p className="section-subtitle">Manage your time tracking categories</p>
                 
-                <ul className="categories-list">
-                    {categories.map((category) => (
-                        <li key={category.id} className="category-item">
-                            <section className="category-content">
-                                <section className="category-header">
-                                    <section className="category-icon" style={{ backgroundColor: category.color }}></section>
-                                    <section className="category-info">
-                                        <h5 className="category-name">{category.name}</h5>
-                                        <p className="category-description">{category.description}</p>
+                {categories === null ? (
+                    <div className="loading-state">
+                        <div className="spinner"></div>
+                        <p>Loading projects...</p>
+                    </div>
+                ) : categories.length === 0 ? (
+                    <div className="empty-state">
+                        <p>No projects yet. Create your first one above!</p>
+                    </div>
+                ) : (
+                    <ul className="categories-list">
+                        {categories.map((category) => (
+                            <li key={category.id} className="category-item">
+                                <section className="category-content">
+                                    <section className="category-header">
+                                        <section className="category-icon" style={{ backgroundColor: category.colorHex }}></section>
+                                        <section className="category-info">
+                                            <h5 className="category-name">{category.name}</h5>
+                                            <p className="category-description">{category.description}</p>
+                                        </section>
+                                    </section>
+                                    <section className="category-times">
+                                        <section className="time-block">
+                                            <p className="time-label">Today</p>
+                                            <p className="time-value">0:00</p>
+                                        </section>
+                                        <section className="time-block">
+                                            <p className="time-label">Total</p>
+                                            <p className="time-value">0:00</p>
+                                        </section>
                                     </section>
                                 </section>
-                                <section className="category-times">
-                                    <section className="time-block">
-                                        <p className="time-label">Today</p>
-                                        <p className="time-value">{category.todayTime}</p>
-                                    </section>
-                                    <section className="time-block">
-                                        <p className="time-label">Total</p>
-                                        <p className="time-value">{category.totalTime}</p>
-                                    </section>
-                                </section>
-                            </section>
-                            <button 
-                                className="delete-button"
-                                onClick={() => handleDeleteCategory(category.id)}
-                                aria-label="Delete category"
-                            >
-                                🗑️
-                            </button>
-                        </li>
-                    ))}
-                </ul>
+                                <button 
+                                    className="delete-button"
+                                    onClick={() => handleDeleteCategory(category.id)}
+                                    aria-label="Delete category"
+                                >
+                                    🗑️
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </section>
         </section>
     );
