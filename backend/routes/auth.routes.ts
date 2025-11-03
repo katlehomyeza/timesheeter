@@ -10,6 +10,23 @@ const router = express.Router();
 
 const CLIENT_URL = "http://localhost:5173";
 
+const generateTokens = (userId: string, email: string, name: string) => {
+  const accessToken = jwt.sign(
+    { userId, email, name },
+    env.auth.jwtSecret!,
+    { expiresIn: "15m" } // Short-lived access token
+  );
+
+  const refreshToken = jwt.sign(
+    { userId, email, tokenType: "refresh" },
+    env.auth.refreshTokenSecret!, // Use a different secret for refresh tokens
+    { expiresIn: "7d" } // Long-lived refresh token
+  );
+
+  return { accessToken, refreshToken };
+};
+
+
 passport.use(
   new GoogleStrategy(
     {
@@ -65,14 +82,10 @@ router.get(
         name: req.user.name,
       };
 
-      const token = jwt.sign(
-        { 
-          userId: req.user.id,     
-          email: req.user.email,
-          name: req.user.name 
-        },
-        env.auth.jwtSecret!,
-        { expiresIn: "1h" }
+       const { accessToken, refreshToken } = generateTokens(
+        req.user.id,
+        req.user.email,
+        req.user.name
       );
 
       // Send HTML that posts message to parent window
@@ -114,7 +127,8 @@ router.get(
               if (window.opener) {
                 window.opener.postMessage(
                 { 
-                    token: '${token}',
+                    token: '${accessToken}',
+                    refreshToken: '${refreshToken}',
                     user: '${JSON.stringify(userPayload)}',
                 }, 
                 '${CLIENT_URL}'
@@ -152,5 +166,76 @@ router.get(
     }
   }
 );
+
+// Validate JWT token
+router.post("/validate", (req, res) => {
+  try {
+    const { token } = req.body;
+    
+    if (token) {
+      const decoded = jwt.verify(token, env.auth.jwtSecret!) as any;
+      res.status(200).json({
+        valid: true,
+        user: {
+          userId: decoded.userId,
+          email: decoded.email,
+          name: decoded.name
+        }
+      });
+    } else {
+      res.status(401).json({ error: "Token required" });
+    }
+  } catch (error) {
+    const isExpired = error instanceof jwt.TokenExpiredError;
+    
+    if (isExpired) {
+      res.status(401).json({ valid: false, error: "Token expired" });
+    } else {
+      res.status(401).json({ valid: false, error: "Invalid token" });
+    }
+  }
+});
+
+// Refresh access token using refresh token
+router.post("/refresh", async (req, res) => {
+  try {
+    const { refreshToken } = req.body;    
+    if (refreshToken) {
+      const decoded = jwt.verify(refreshToken, env.auth.refreshTokenSecret!) as jwt.JwtPayload;
+      const isRefreshToken = decoded.tokenType === "refresh";
+      
+      if (isRefreshToken) {
+        const user = await getUserByEmail(decoded.email);
+        if (user) {
+          const tokens = generateTokens(user.id, user.email, user.name);
+          res.status(200).json({
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+            user: {
+              userId: user.id,
+              email: user.email,
+              name: user.name
+            }
+          });
+        } else {
+          res.status(401).json({ message: "User not found" });
+        }
+      } else {
+        res.status(401).json({ message: "Invalid token type" });
+      }
+    } else {
+      res.status(401).json({ message: "Refresh token required" });
+    }
+  } catch (error) {
+    const isExpired = error instanceof jwt.TokenExpiredError;
+    
+    if (isExpired) {
+      res.status(401).json({ message: "Refresh token expired" });
+    } else {
+      res.status(401).json({ message: "Invalid refresh token" });
+    }
+  }
+});
+
 
 export default router;
