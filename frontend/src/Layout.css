@@ -14,3 +14,8 @@
   height: 100%;
   background-color: #000000; /* ADD - force black */
 }
+
+ClockLoader{
+  display: flex;
+  justify-content: center;
+}
