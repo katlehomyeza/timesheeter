@@ -18,6 +18,7 @@ export type TimeLog = {
   endTime?: Date;
   durationMinutes: number;
   note?: string;
+  createdAt: Date;
 };
 
 export type Goal = {
