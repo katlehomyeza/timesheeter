@@ -44,38 +44,52 @@ export async function handleGoogleAuthentication(): Promise<{ token: string; use
 }
 
 export async function checkAuth(): Promise<boolean> {
-  const token = localStorage.getItem('authToken');  
-  if (!token) {
+  const token = localStorage.getItem('authToken');
+  if (!token) return false;
+
+  try {
+    const data = await fetch('http://localhost:4000/api/auth/validate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    }).then((res) => res.json());
+
+    if (data.valid) return true;
+
+    // Try refreshing token if invalid
+    return await refreshAccessToken();
+  } catch (error) {
+    console.error('Token validation failed:', error);
+    clearAuthTokens();
     return false;
-  } else  {
-    try {
-        const data = await API.post("/auth/validate",{token})
-        return data.valid;
-    } catch (error) {
-      clearAuthTokens();
-      console.error('Invalid token:', error);
-      return false;
-    }
   }
 }
 
+// Attempts to refresh tokens
 export async function refreshAccessToken(): Promise<boolean> {
   const refreshToken = localStorage.getItem('refreshToken');
-  
-  if (!refreshToken) {
-    return false;
-  } else {
-    try {
-      const data =await API.post("/auth/refresh",{refreshToken})
+  if (!refreshToken) return false;
+
+  try {
+    const data = await fetch('http://localhost:4000/api/auth/refresh', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+    }).then((res) => res.json());
+
+    if (data.accessToken) {
       localStorage.setItem('authToken', data.accessToken);
       localStorage.setItem('refreshToken', data.refreshToken);
       localStorage.setItem('user', JSON.stringify(data.user));
       return true;
-    } catch (error) {
-      console.error('Error refreshing token:', error);
-      clearAuthTokens();
-      return false;
     }
+
+    clearAuthTokens();
+    return false;
+  } catch (error) {
+    console.error('Error refreshing token:', error);
+    clearAuthTokens();
+    return false;
   }
 }
 
