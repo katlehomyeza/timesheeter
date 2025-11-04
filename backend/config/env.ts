@@ -16,5 +16,8 @@ export const env = {
     clientId: process.env.GOOGLE_CLIENT_ID, 
     clientSecret:process.env.GOOGLE_CLIENT_SECRET,
     refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET
+  },
+  constants: {
+    clientUrl: process.env.CLIENT_URL
   }
 };

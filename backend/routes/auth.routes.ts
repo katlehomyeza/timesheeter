@@ -7,20 +7,19 @@ import { env } from "../config/env";
 import { createNewUser, getUserByEmail } from "../queries/user.queries";
 
 const router = express.Router();
-
-const CLIENT_URL = "http://localhost:5173";
+const CLIENT_URL = env.constants.clientUrl!;
 
 const generateTokens = (userId: string, email: string, name: string) => {
   const accessToken = jwt.sign(
     { userId, email, name },
     env.auth.jwtSecret!,
-    { expiresIn: "15m" } // Short-lived access token
+    { expiresIn: "15m" } 
   );
 
   const refreshToken = jwt.sign(
     { userId, email, tokenType: "refresh" },
-    env.auth.refreshTokenSecret!, // Use a different secret for refresh tokens
-    { expiresIn: "7d" } // Long-lived refresh token
+    env.auth.refreshTokenSecret!,
+    { expiresIn: "7d" }
   );
 
   return { accessToken, refreshToken };
@@ -42,10 +41,8 @@ passport.use(
           return done(new Error("No email found in Google profile"), undefined);
         }
 
-        // Check if user exists
         let user = await getUserByEmail(email);
         
-        // Create user if doesn't exist
         if (!user) {
           user = await createNewUser({
             email: email,
@@ -56,7 +53,7 @@ passport.use(
 
         return done(null, user);
       } catch (error) {
-        return done(error as Error, undefined);
+        return done(error, undefined);
       }
     }
   )
@@ -88,7 +85,6 @@ router.get(
         req.user.name
       );
 
-      // Send HTML that posts message to parent window
     res.send(`
         <!DOCTYPE html>
         <html>
@@ -145,7 +141,6 @@ router.get(
     } catch (error) {
       console.error("Error creating JWT:", error);
       
-      // Send error message to parent window
       res.send(`
         <!DOCTYPE html>
         <html>
@@ -167,7 +162,6 @@ router.get(
   }
 );
 
-// Validate JWT token
 router.post("/validate", (req, res) => {
   try {
     const { token } = req.body;
@@ -196,7 +190,6 @@ router.post("/validate", (req, res) => {
   }
 });
 
-// Refresh access token using refresh token
 router.post("/refresh", async (req, res) => {
   try {
     const { refreshToken } = req.body;    
