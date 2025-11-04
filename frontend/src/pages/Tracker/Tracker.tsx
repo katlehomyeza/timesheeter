@@ -4,6 +4,7 @@ import type { Project, TimeLog } from '@shared/types/project.types';
 import { getProjects } from '../../services/project.service';
 import { isError } from '../../utils/utils';
 import { getTimeLogs, createTimeLog, deleteTimelog } from '../../services/timelog.service';
+import ClockLoader from '../../components/ClockLoader/ClockLoader';
 
 export default function Tracker(){
     const [projects, setProjects] = useState<Project[]>([]);
@@ -305,7 +306,9 @@ export default function Tracker(){
                 <h1 id="recent-entries-title">Recent Entries</h1>
                 <p>Your latest time entries</p>
 
-                {timeLogs.length === 0 ? (
+                { selectedProjectId && timeLogs === null ? (
+                    <ClockLoader /> 
+                ) :timeLogs.length === 0 ? (
                     <p>No entries yet. Start tracking time!</p>
                 ) : (
                     <ul>
