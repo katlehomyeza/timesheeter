@@ -32,6 +32,6 @@ export type Goal = {
 
 export type GoalPeriod = {
     id:UUID,
-    period: "daily"|"weekly"|"monthly"
+    period: string
 }
 
