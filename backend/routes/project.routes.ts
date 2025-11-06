@@ -1,6 +1,8 @@
 import express from "express"
 import { createNewProject, deleteProject, getAllProjects, isUsersProject } from "../queries/project.queries";
 import { authenticateToken } from "../middleware/auth";
+import { deleteGoal, getGoalByProjectId } from "../queries/goals.queries";
+import { deleteTimelog, getTimeLogs } from "../queries/timelogs.queries";
 
 const router = express.Router();
 router.use(authenticateToken)
@@ -42,13 +44,22 @@ router.delete("/:projectId", async (req,res) => {
         const { userId } = req.authUser!;
         const isUserProject = await isUsersProject(userId, projectId);
         if ( isUserProject ) {
+            const [associatedTimeLogs, associatedGoals] = await Promise.all([
+            getTimeLogs(userId, projectId),
+            getGoalByProjectId(userId, projectId),
+            ]);
+
+            await Promise.all([
+            ...associatedTimeLogs.map(timelog => deleteTimelog(timelog.id)),
+            ...associatedGoals.map(goal => deleteGoal(goal.id)),
+            ]);
             const deletedProject = await deleteProject(projectId);
             res.status(200).json(deletedProject);
         } else {
             res.status(401).json({message:"You can only delete your own projects"});
         }
     } catch (error) {
-        res.status(500).json({ message: "Something went wrong" });
+        res.status(500).json({ message: "Something went wrong", detail: error});
     }
 });
 
