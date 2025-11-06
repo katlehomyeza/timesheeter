@@ -67,6 +67,21 @@ const API = {
       )
     ),
 
+  patch: (url: string, data: any) =>
+    fetch(`${BASE_URL}${url}`, {
+      method: 'PATCH',
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    }).then((res) =>
+      handleResponse(res, () =>
+        fetch(`${BASE_URL}${url}`, {
+          method: 'PATCH',
+          headers: getHeaders(),
+          body: JSON.stringify(data),
+        })
+      )
+    ),
+
   delete: (url: string) =>
     fetch(`${BASE_URL}${url}`, {
       method: 'DELETE',
