@@ -1,10 +1,28 @@
 import express from "express";
 import { authenticateToken } from "../middleware/auth";
-import { createManualTimeLog, createTimeLog, deleteTimelog, getTimeLogs, isUserTimeLog } from "../queries/timelogs.queries";
+import { createManualTimeLog, createTimeLog, deleteTimelog, getTimeLogs, getTimeLogsByCreatedAt, isUserTimeLog } from "../queries/timelogs.queries";
 import type { TimeLog } from "@shared/types/project.types";
 
 const router = express.Router();
 router.use(authenticateToken)
+
+router.get("/", async (req, res) => {
+  try {
+    const userId = req.authUser!.userId;
+    const { date } = req.query;
+    if(!date) {
+        res.status(400).json({message: "Please insert a date"});
+    } else {
+        const startOfDay = new Date(`${date}T00:00:00.000Z`);
+        const endOfDay = new Date(`${date}T23:59:59.999Z`);
+        const timeLogs = await getTimeLogsByCreatedAt(userId, startOfDay, endOfDay);
+        res.status(200).json(timeLogs);
+    }
+  } catch (error) {
+    console.error("Error fetching timelogs for day:", error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+});
 
 router.get("/:projectId", async (req, res) =>{
     try {
@@ -16,6 +34,7 @@ router.get("/:projectId", async (req, res) =>{
         res.status(500).json({ message: "Something went wrong" });
     }
 });
+
 
 router.post("/", async (req, res) =>{
     try {

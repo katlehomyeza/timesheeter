@@ -60,3 +60,19 @@ export async function getTimeLogs(
     }
   }
 }
+
+export async function getDailyTimeLog(
+    date: String   
+): Promise<TimeLog[] | ErrorDetail> {
+  try {
+    return await API.get(`/timelogs?date=${date}`);
+  } catch (error) {
+    if (isErrorDetail(error)) {
+      return error;
+    } else {
+      return {
+        message: "Failed to fetch time logs: Please try again later",
+      };
+    }
+  }
+}
