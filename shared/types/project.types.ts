@@ -9,6 +9,10 @@ export type Project = {
     colorHex : string,
 }
 
+export type ProjectWithTotalMinutes = Project & {
+  totalMinutes:number
+}
+
 export type TimeLog = {
   id: UUID;
   userId: string;

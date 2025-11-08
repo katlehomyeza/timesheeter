@@ -1,5 +1,5 @@
 import { isErrorDetail, type ErrorDetail } from "@shared/types/utility.types";
-import type { Project } from "@shared/types/project.types"
+import type { Project, ProjectWithTotalMinutes } from "@shared/types/project.types"
 import API from "../utils/api";
 
 export async function createProject(
@@ -39,6 +39,20 @@ export async function deleteProject(
 export async function getProjects() : Promise< Project[] | ErrorDetail >{
     try {
       return await API.get("/projects");
+    } catch (error) {
+      if (isErrorDetail(error)) {
+        return error
+      } else {
+        return {
+            message:"Failed to get projects: Please try again later"
+        };
+      }
+  }
+}
+
+export async function getProjectsWithTotalTimes() : Promise< ProjectWithTotalMinutes[] | ErrorDetail >{
+    try {
+      return await API.get("/projects?includeTotalTime=true");
     } catch (error) {
       if (isErrorDetail(error)) {
         return error
