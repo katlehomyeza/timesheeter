@@ -1,5 +1,5 @@
 import express from "express"
-import { createNewProject, deleteProject, getAllProjects, isUsersProject } from "../queries/project.queries";
+import { createNewProject, deleteProject, getAllProjects, getProjectTotalTimes, isUsersProject } from "../queries/project.queries";
 import { authenticateToken } from "../middleware/auth";
 import { deleteGoal, getGoalByProjectId } from "../queries/goals.queries";
 import { deleteTimelog, getTimeLogs } from "../queries/timelogs.queries";
@@ -30,7 +30,9 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
     try {
         const userId = req.authUser!.userId;
-        const projects = await getAllProjects(userId);
+        const includeTotalTime = req.query.includeTotalTime?.toString().toLowerCase() === 'true';
+        console.log(includeTotalTime)
+        const projects = await ( includeTotalTime ? getProjectTotalTimes(userId) : getAllProjects(userId) );
         res.status(200).json(projects);
     } catch (error) {
         res.status(500).json({ message: "Something went wrong" });
