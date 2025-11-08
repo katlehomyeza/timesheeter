@@ -149,3 +149,30 @@ export async function isUserTimeLog(
 
   return (result.rowCount!==null && result.rowCount > 0);
 }
+
+export async function getTimeLogsByCreatedAt(
+  userId: User["id"],
+  startOfDay: Date,
+  endOfDay: Date
+): Promise<TimeLog[]> {
+  const query = `
+    SELECT
+      timelog_id AS id,
+      user_id AS "userId",
+      project_id AS "projectId",
+      goal_id AS "goalId",
+      start_time AS "startTime",
+      end_time AS "endTime",
+      duration_minutes AS "durationMinutes",
+      note,
+      created_at AS "createdAt"
+    FROM timelogs
+    WHERE user_id = $1
+      AND created_at BETWEEN $2 AND $3
+    ORDER BY created_at ASC;
+  `;
+
+  const result = await pool.query(query, [userId, startOfDay, endOfDay]);
+  return result.rows;
+}
+
