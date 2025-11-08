@@ -1,4 +1,3 @@
-import API from "../utils/api";
 
 export async function handleGoogleAuthentication(): Promise<{ token: string; user: any }> {
   return new Promise((resolve, reject) => {
