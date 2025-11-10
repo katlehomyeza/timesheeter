@@ -31,7 +31,7 @@ passport.use(
     {
       clientID: env.auth.clientId!,
       clientSecret: env.auth.clientSecret!,
-      callbackURL: "http://localhost:4000/api/auth/google/callback",
+      callbackURL: env.auth.callbackURL,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {

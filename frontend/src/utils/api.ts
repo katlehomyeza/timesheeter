@@ -1,6 +1,7 @@
 import { refreshAccessToken } from "../services/auth.service";
 
-const BASE_URL = 'http://localhost:4000/api';
+export const BASE_ORIGIN = 'https://timesheeter-production.up.railway.app';
+export const BASE_URL = `${BASE_ORIGIN}/api`;
 
 function getHeaders() {
   const token = localStorage.getItem('authToken');

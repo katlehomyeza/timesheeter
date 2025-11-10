@@ -1,8 +1,9 @@
+import { BASE_ORIGIN, BASE_URL } from "../utils/api";
 
 export async function handleGoogleAuthentication(): Promise<{ token: string; user: any }> {
   return new Promise((resolve, reject) => {
     const popup = window.open(
-      'http://localhost:4000/api/auth/google',
+      `${BASE_URL}/auth/google`,
       'Google Sign In',
       'width=500,height=600'
     );
@@ -13,7 +14,7 @@ export async function handleGoogleAuthentication(): Promise<{ token: string; use
     }
 
     const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== 'http://localhost:4000') return;
+      if (event.origin !== BASE_ORIGIN) return;
 
       if (event.data.token && event.data.user && event.data.refreshToken) {
         localStorage.setItem('authToken', event.data.token);
@@ -47,7 +48,7 @@ export async function checkAuth(): Promise<boolean> {
   if (!token) return false;
 
   try {
-    const data = await fetch('http://localhost:4000/api/auth/validate', {
+    const data = await fetch(`${BASE_URL}/auth/validate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token }),
@@ -70,7 +71,7 @@ export async function refreshAccessToken(): Promise<boolean> {
   if (!refreshToken) return false;
 
   try {
-    const data = await fetch('http://localhost:4000/api/auth/refresh', {
+    const data = await fetch(`${BASE_URL}/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refreshToken }),

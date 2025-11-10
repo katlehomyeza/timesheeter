@@ -15,6 +15,7 @@ export const env = {
     jwtSecret: process.env.JWT_SECRET,
     clientId: process.env.GOOGLE_CLIENT_ID, 
     clientSecret:process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL:process.env.CALLBACK_URL,
     refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET
   },
   constants: {
