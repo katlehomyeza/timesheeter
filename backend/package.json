@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
+    "build": "node build.js",
     "start": "node dist/index.js"
   },
   "author": "",
@@ -20,6 +20,8 @@
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.17",
     "@types/pg": "^8.15.5",
+    "esbuild": "^0.27.0",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.20.6"
   },
   "dependencies": {
