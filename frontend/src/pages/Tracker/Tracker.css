@@ -153,7 +153,6 @@ body {
 .time-tracker form[aria-label="Stopwatch controls"] button[type="button"]:last-of-type:hover {
   background-color: #333333;
 }
-
 /* Manual entry grid layout */
 .time-tracker form[aria-label="Manual time entry form"] {
   display: grid;
@@ -161,24 +160,39 @@ body {
   gap: 0.6rem;
 }
 
-.time-tracker form[aria-label="Manual time entry form"] label:nth-of-type(1),
-.time-tracker form[aria-label="Manual time entry form"] input:nth-of-type(1) {
+.time-tracker form[aria-label="Manual time entry form"] label[for="manual-hours"] {
   grid-column: 1;
+  grid-row: 1;
 }
 
-.time-tracker form[aria-label="Manual time entry form"] label:nth-of-type(2),
-.time-tracker form[aria-label="Manual time entry form"] input:nth-of-type(2) {
+.time-tracker form[aria-label="Manual time entry form"] input#manual-hours {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.time-tracker form[aria-label="Manual time entry form"] label[for="manual-minutes"] {
   grid-column: 2;
+  grid-row: 1;
 }
 
-.time-tracker form[aria-label="Manual time entry form"] label:nth-of-type(3),
-.time-tracker form[aria-label="Manual time entry form"] input:nth-of-type(3) {
+.time-tracker form[aria-label="Manual time entry form"] input#manual-minutes {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.time-tracker form[aria-label="Manual time entry form"] label[for="manual-date"] {
   grid-column: 1 / -1;
+  grid-row: 3;
 }
 
-/* Manual entry submit button */
+.time-tracker form[aria-label="Manual time entry form"] input#manual-date {
+  grid-column: 1 / -1;
+  grid-row: 4;
+}
+
 .time-tracker form[aria-label="Manual time entry form"] button[type="submit"] {
   grid-column: 1 / -1;
+  grid-row: 5;
   background-color: var(--accent);
   color: white;
 }
