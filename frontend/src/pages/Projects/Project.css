@@ -21,10 +21,10 @@
     --space-3xl: 2rem;
     
     /* Font Sizes */
-    --font-xs: 0.75rem;
-    --font-sm: 0.875rem;
-    --font-base: 1rem;
-    --font-lg: 1.25rem;
+    --font-xs: 9pt;
+    --font-sm: 11pt;
+    --font-base: 12pt;
+    --font-lg: 15pt;
     
     /* Font Weights */
     --font-medium: 500;
@@ -252,4 +252,134 @@ body {
 
 .delete-button:hover {
     opacity: 1;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    :root {
+        /* Smaller font sizes for mobile */
+        --font-xs: 8pt;
+        --font-sm: 9pt;
+        --font-base: 10pt;
+        --font-lg: 12pt;
+        
+        /* Tighter spacing */
+        --space-xs: 0.2rem;
+        --space-sm: 0.4rem;
+        --space-md: 0.6rem;
+        --space-lg: 0.75rem;
+        --space-xl: 1rem;
+        --space-2xl: 1.25rem;
+        --space-3xl: 1.5rem;
+        
+        /* Smaller sizes */
+        --icon-size: 2rem;
+        --color-picker-height: 2.5rem;
+    }
+
+    body {
+        padding-bottom: 5rem; /* Space for bottom nav */
+    }
+
+    .container {
+        grid-template-columns: 1fr;
+        gap: var(--space-2xl);
+        padding: var(--space-2xl) var(--space-lg);
+    }
+
+    .add-category-section,
+    .categories-section {
+        padding: var(--space-2xl) var(--space-xl);
+    }
+
+    .section-title {
+        font-size: var(--font-lg);
+        margin-bottom: var(--space-xs);
+    }
+
+    .section-subtitle {
+        font-size: var(--font-xs);
+        margin-bottom: var(--space-2xl);
+    }
+
+    .form-group {
+        margin-bottom: var(--space-xl);
+    }
+
+    .form-label {
+        font-size: var(--font-xs);
+        margin-bottom: var(--space-xs);
+    }
+
+    .form-input {
+        padding: var(--space-md);
+        font-size: var(--font-sm);
+    }
+
+    .add-button {
+        padding: var(--space-md);
+        font-size: var(--font-sm);
+    }
+
+    .categories-list {
+        gap: var(--space-md);
+    }
+
+    .category-item {
+        padding: var(--space-lg);
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-md);
+    }
+
+    /* Stack category content vertically on mobile */
+    .category-content {
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
+    }
+
+    .category-header {
+        gap: var(--space-md);
+    }
+
+    .category-icon {
+        width: var(--icon-size);
+        height: var(--icon-size);
+    }
+
+    .category-info {
+        gap: var(--space-xs);
+    }
+
+    .category-name {
+        font-size: var(--font-sm);
+    }
+
+    .category-description {
+        font-size: var(--font-xs);
+    }
+
+    /* Stack time blocks horizontally but make them smaller */
+    .category-times {
+        gap: var(--space-2xl);
+        justify-content: flex-start;
+    }
+
+    .time-block {
+        gap: 0.15rem;
+    }
+
+    .time-label {
+        font-size: var(--font-xs);
+    }
+
+    .time-value {
+        font-size: var(--font-sm);
+    }
+
+    .delete-button {
+        font-size: var(--font-base);
+        padding: var(--space-xs);
+        align-self: flex-end;
+    }
 }

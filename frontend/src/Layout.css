@@ -29,4 +29,8 @@
     margin-bottom: 4rem; /* Space for bottom nav bar */
     padding-bottom: 1rem;
   }
+
+  .layout {
+    padding-bottom: 5rem; /* Space for bottom nav bar */
+  }
 }

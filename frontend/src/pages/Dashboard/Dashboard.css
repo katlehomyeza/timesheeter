@@ -1,4 +1,3 @@
-
 :root {
     --bg-primary: #0a0a0a;
     --bg-secondary: #171717;
@@ -19,12 +18,12 @@
     --radius-sm: 0.375rem;
     --radius-md: 0.5rem;
     --radius-lg: 0.75rem;
-    --font-sm: 0.875rem;
-    --font-md: 1rem;
-    --font-lg: 1.125rem;
-    --font-xl: 1.5rem;
-    --font-2xl: 2rem;
-    --font-3xl: 3rem;
+    --font-sm: 11pt;
+    --font-md: 13pt;
+    --font-lg: 14pt;
+    --font-xl: 18pt;
+    --font-2xl: 24pt;
+    --font-3xl: 36pt;
 }
 
 * {
@@ -65,12 +64,10 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
     gap: var(--space-lg);
-    
     margin-bottom: var(--space-2xl);
 }
 
 .stat-card {
-    
     background: var(--bg-primary);
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
@@ -95,7 +92,6 @@ body {
 }
 
 .stats-value {
-    
     font-size: var(--font-2xl);
     font-weight: 700;
     margin-bottom: var(--space-xs);
@@ -264,58 +260,110 @@ body {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-@media (max-width: 48em) {
-    .dashboard {
-    padding: var(--space-md);
-    }
-    
-    .stats-grid {
-    grid-template-columns: 1fr;
-    }
-    
-    .time-grid {
-    font-size: 0.75rem;
-    gap: 0.25rem;
-    }
-    
-    .grid-cell, .grid-header {
-    padding: 0.25rem;
-    }
-}
-
 .weekly-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
 }
 
 .week-navigator {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .week-label {
-  font-weight: 500;
+    font-weight: 500;
 }
 
 .nav-btn {
-  color: white;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 50%;
-  transition: background 0.2s;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 50%;
+    transition: background 0.2s;
 }
 
 .nav-btn:hover:not(:disabled) {
-  background: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .nav-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+    opacity: 0.4;
+    cursor: not-allowed;
 }
 
+/* Mobile Styles */
+@media (max-width: 768px) {
+    /* Smaller font sizes for mobile */
+    :root {
+        --font-sm: 9pt;
+        --font-md: 11pt;
+        --font-lg: 12pt;
+        --font-xl: 14pt;
+        --font-2xl: 18pt;
+        --font-3xl: 24pt;
+    }
+
+    .dashboard {
+        padding: var(--space-md);
+    }
+    
+    /* 2x2 grid for stat cards on mobile */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-sm);
+    }
+
+    .stat-card {
+        padding: var(--space-md);
+    }
+
+    .stats-value {
+        font-size: var(--font-xl);
+    }
+    
+    /* Make time grid scrollable horizontally */
+    .weekly-grid {
+        padding: var(--space-md);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .time-grid {
+        min-width: 600px;
+        font-size: 9pt;
+        gap: 0.25rem;
+    }
+    
+    .grid-cell, .grid-header {
+        padding: 0.5rem 0.25rem;
+        font-size: 9pt;
+    }
+
+    .grid-row-label {
+        padding: 0.5rem 0.25rem;
+        font-size: 9pt;
+    }
+
+    .weekly-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+    }
+
+    .section {
+        padding: var(--space-md);
+    }
+
+    .header h1 {
+        font-size: var(--font-2xl);
+    }
+
+    .header p {
+        font-size: var(--font-md);
+    }
+}
