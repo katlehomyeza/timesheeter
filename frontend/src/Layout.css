@@ -1,21 +1,32 @@
+/* Layout.css */
 .layout {
   display: flex;
-  width: 100vw;  /* Changed from 100% to 100vw */
+  width: 100vw;
   height: 100vh;
-  background-color: #000000; /* Ensure pure black */
+  background-color: #000000;
   color: white;
   overflow: hidden;
-  position: relative; /* ADD */
+  position: relative;
 }
 
 .layout-main {
   flex: 1;
   overflow-y: auto;
   height: 100%;
-  background-color: #000000; /* ADD - force black */
+  background-color: #000000;
+  margin-left: 12rem; /* Sidebar width on desktop */
 }
 
-ClockLoader{
+.ClockLoader {
   display: flex;
   justify-content: center;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .layout-main {
+    margin-left: 0;
+    margin-bottom: 4rem; /* Space for bottom nav bar */
+    padding-bottom: 1rem;
+  }
 }

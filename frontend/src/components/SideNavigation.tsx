@@ -1,3 +1,4 @@
+// SideNavigation.tsx
 import { Link, useLocation } from 'react-router-dom';
 import { Clock, BarChart3, Target, Folder } from 'lucide-react';
 import './SideNavigation.css';
@@ -14,7 +15,9 @@ const Sidebar = () => {
     { path: '/projects', icon: Folder, label: 'Projects' },
     { path: '/goals', icon: Target, label: 'Goals' },
   ];
-  let loggedInUser = (retrieveUser());
+  
+  let loggedInUser = retrieveUser();
+  
   return (
     <div className="sidebar">
       {/* Logo */}
@@ -24,11 +27,11 @@ const Sidebar = () => {
         </div>
         <div>
           {!isError(loggedInUser) && (
-          <div>
-            <div className="sidebar-title">TimeSheeter</div>
-            <div className="sidebar-subtitle">{loggedInUser.name}</div>
-          </div>
-        )}
+            <div>
+              <div className="sidebar-title">TimeSheeter</div>
+              <div className="sidebar-subtitle">{loggedInUser.name}</div>
+            </div>
+          )}
         </div>
       </div>
       
@@ -49,7 +52,7 @@ const Sidebar = () => {
           );
         })}
       </div>
-      <button id = "logout-btn" onClick={logout}>Log out</button>
+      <button id="logout-btn" onClick={logout}>Log out</button>
     </div>
   );
 };
