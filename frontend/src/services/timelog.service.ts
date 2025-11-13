@@ -11,6 +11,7 @@ export async function createTimeLog(
     note?: string;
     goalId?: string;
     isManualEntry: boolean;
+    date?: String;   
   }
 ): Promise<TimeLog | ErrorDetail> {
   try {

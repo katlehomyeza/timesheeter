@@ -159,6 +159,7 @@ export default function Tracker(){
         const response = await createTimeLog(selectedProjectId, {
             durationMinutes: totalMinutes,
             isManualEntry: true,
+            date: manualDate
         });
         
         if (!isError(response)) {

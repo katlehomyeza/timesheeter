@@ -41,6 +41,7 @@ router.post("/", async (req, res) =>{
         const { 
             projectId, 
             durationMinutes,
+            date, 
             startTime, 
             endTime, 
             note, 
@@ -48,27 +49,33 @@ router.post("/", async (req, res) =>{
             goalId 
         } = req.body;
         const userId = req.authUser!.userId;
-        const manual = isManualEntry === true || isManualEntry === 'true';
-        let createdTimeLog: TimeLog;
-        if ( manual ) {
-            createdTimeLog = await createManualTimeLog(
-                userId,
-                projectId,
-                durationMinutes,
-                note,
-                goalId
-            );
+        if(!date){
+            res.status(400).json({message:"Manual entries must have a date entry"})
         } else {
-            createdTimeLog = await createTimeLog(
-                userId,
-                projectId,
-                startTime,
-                endTime,
-                note,
-                goalId
-            );
+            const createdDate = new Date(`${date}T00:00:00.000Z`);
+            const manual = isManualEntry === true || isManualEntry === 'true';
+            let createdTimeLog: TimeLog;
+            if ( manual ) {
+                createdTimeLog = await createManualTimeLog(
+                    userId,
+                    projectId,
+                    durationMinutes,
+                    createdDate,
+                    note,
+                    goalId
+                );
+            } else {
+                createdTimeLog = await createTimeLog(
+                    userId,
+                    projectId,
+                    startTime,
+                    endTime,
+                    note,
+                    goalId
+                );
+            }
+            res.status(201).json(createdTimeLog);
         }
-        res.status(201).json(createdTimeLog);
     } catch (error) {
         res.status(500).json({ message: (error) });
     }

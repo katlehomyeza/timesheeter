@@ -53,6 +53,7 @@ export async function createManualTimeLog(
   userId: User["id"],
   projectId: Project['id'],
   durationMinutes: number,
+  timeFrame: Date,
   note?: string,
   goalId?: Goal['id']
 ): Promise<TimeLog> {
@@ -60,7 +61,7 @@ export async function createManualTimeLog(
     INSERT INTO timelogs (
       user_id, project_id, goal_id, duration_minutes, note, created_at
     )
-    VALUES ($1, $2, $3, $4, $5, NOW())
+    VALUES ($1, $2, $3, $4, $5, $6)
     RETURNING 
       timelog_id AS id,
       user_id AS "userId",
@@ -79,6 +80,7 @@ export async function createManualTimeLog(
     goalId ?? null,
     durationMinutes,
     note ?? null,
+    timeFrame
   ];
 
   const result = await pool.query(query, values);
